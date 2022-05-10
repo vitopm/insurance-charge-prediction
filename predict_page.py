@@ -17,6 +17,8 @@ le_region = data["le_region"]
 
 def show_predict_page():
     st.title("Insurance Charge Prediction")
+    st.write("------------")
+
 
     st.write("""
         ##### Input information to predict the insurance charge
@@ -66,4 +68,5 @@ def show_predict_page():
                         columns = column_values)
 
         charge = regressor_loaded.predict(X)
+        st.write("------------")
         st.subheader(f"The estimated charge is ${charge[0]:.2f}")

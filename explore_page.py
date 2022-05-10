@@ -5,6 +5,8 @@ import os
 
 def show_explore_page():
     st.header("Data exploratory Analysis")
+    st.write("------------")
+
     # st.subheader("Nothing is written here yet, hang on for a moment!")
 
     import pandas as pd
@@ -133,7 +135,25 @@ def show_explore_page():
     plt.cla()
     plt.clf()
     
+    st.write("### Heatmap Corellation")
+    fig, ax = plt.subplots()
+    plt.figure(figsize=(15, 10))
+    sns.heatmap(df.corr(), ax=ax, annot=True, cmap = 'YlGnBu')
+    st.write(fig)
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
 
+    fig, ax = plt.subplots()
+    corr = df.corr()[['charges']].sort_values(by='charges', ascending=False)
+    plt.figure(figsize=(8, 12))
+    sns.heatmap(corr, vmin=-1, vmax=1, ax=ax, annot=True, cmap = 'BrBG')
+    st.write(fig)
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
 
     # x = np.random.normal(size = 1000)
     # plt.hist(x, bins=50)
@@ -142,27 +162,64 @@ def show_explore_page():
     # os.remove("x.png")
 
     st.write("## Machine Learning Modelling")
-    st.write("We are using **decision tree regression** for making our prediction.")
-    st.write("We have determined *independent variable*:")
+    st.write("We are using **Random Forest Regression** for making our prediction.")
+    st.write("We have determined the **independent variables**:")
     X = df.iloc[:, :-1]
     for col in X.columns:
         st.write("- {col} ".format(col = col))
     # X.head()
 
-    st.write("Also the *dependent variable*:")
+    st.write("Also the **dependent variable**:")
     st.write("- charges")
     y = df.iloc[:, -1]
     # y.head()
 
-    from sklearn.metrics import mean_squared_error, mean_absolute_error
-    import numpy as np 
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
 
-    from sklearn.tree import DecisionTreeRegressor
-    regressor = DecisionTreeRegressor(random_state=0)
-    regressor.fit(X, y)
+    st.write("Then the data were split into 80% training data set and 20% test data set.")
+    st.write("**X_train**")
+    st.write(X_train.head())
+    st.write("**X_test**")
+    st.write(X_test.head())
+    st.write("**y_train**")
+    st.write(y_train.head())
+    st.write("**y_test**")
+    st.write(y_test.head())
 
-    y_pred = regressor.predict(X)
+    # from sklearn.tree import DecisionTreeRegressor
+    # regressor = DecisionTreeRegressor(random_state=0)
+    # regressor.fit(X, y)
 
-    error = np.sqrt(mean_squared_error(y, y_pred))
-    st.write("After running the training, we get MSE as much as {mse:.2f}.".format(mse=error))
-    
+    from sklearn.ensemble import RandomForestRegressor
+    random_for_reg = RandomForestRegressor(random_state=0)
+    random_for_reg.fit(X_train,y_train)
+    y_pred = random_for_reg.predict(X_test)
+
+    st.write("## Results")
+    st.write("------------")
+
+    fig, ax = plt.subplots()
+    plt.scatter(random_for_reg.predict(X_train), y_train, edgecolor="k", c = "yellow",  label = "Training data")
+    plt.scatter(random_for_reg.predict(X_test), y_test, edgecolor="k", c = "red",  label = "Test data")
+    plt.title("Train data vs Test data")
+    plt.xlabel("Predicted values")
+    plt.ylabel("Actual values")
+    plt.legend(loc = "upper left")
+    st.pyplot(fig)
+
+    fig, ax = plt.subplots()
+    plt.scatter(range(len(y_test)), y_test, edgecolor="k", color='yellow', label= "actual value")
+    plt.scatter(range(len(y_pred)), y_pred, edgecolor="k", color='red', label = "prediction")
+    plt.title("y_test vs prediction")
+    plt.xlabel("Range")
+    plt.ylabel("Charge")
+    plt.legend(loc = "upper left")
+    st.pyplot(fig)
+
+    from sklearn import metrics
+    st.write('The R2 (Variance) is: ', metrics.r2_score(y_test, y_pred))
+    st.write('Mean Absolute Error (MAE):', metrics.mean_absolute_error(y_test, y_pred))
+    st.write('Mean Squared Error (MSE):', metrics.mean_squared_error(y_test, y_pred))
+    st.write('Root Mean Squared Error (RMSE) is: ', metrics.mean_squared_error(y_test, y_pred, squared=False))
+
