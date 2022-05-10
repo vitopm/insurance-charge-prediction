@@ -16,12 +16,12 @@ le_smoker = data["le_smoker"]
 le_region = data["le_region"]
 
 def show_predict_page():
-    st.title("Insurance Charge Prediction")
+    st.title("💵👨‍👩‍👧‍👦Insurance Charge Prediction")
     st.write("------------")
 
 
     st.write("""
-        ##### Input information to predict the insurance charge
+        ##### ✍🏻Input information to predict the insurance charge
     """)
 
     sex = (
@@ -54,7 +54,7 @@ def show_predict_page():
     region_choice = st.selectbox("Region", region, help="Choose region where you live")
 
 
-    ok = st.button("Calculate insurance charge",help="Predict your insurance charge based on the provided data above")
+    ok = st.button("🤔Calculate insurance charge",help="Predict your insurance charge based on the provided data above")
 
     if ok:
         array = np.array([[age, sex_choice, bmi, children, smoker_choice, region_choice]])

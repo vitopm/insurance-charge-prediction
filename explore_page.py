@@ -4,7 +4,7 @@ import seaborn as sns
 import os
 
 def show_explore_page():
-    st.header("Data exploratory Analysis")
+    st.header("📊📈Data exploratory Analysis📉👀")
     st.write("------------")
 
     # st.subheader("Nothing is written here yet, hang on for a moment!")
@@ -14,10 +14,10 @@ def show_explore_page():
     df = pd.read_csv("insurance-cost.csv")
     st.write("First off all we have to check how the data looks like")
     st.write(df.head())
-    st.write("Shape: {shape}".format(shape=df.shape))
+    st.write("**Shape: {shape}**".format(shape=df.shape))
     st.write("So there is **1338 records** with **7 columns** of data")
 
-    st.write("Then we take a look at the missing data")
+    st.write("Then we take a look at the **missing data**")
     st.write(df.isnull().sum())
     st.write("Here we can see that there is 2 missing data on each column bmi and smoker, in this step we can either remove the record that has the empty data, or we can fill them with the nearest value or their mean. But for now let's just drop these record with empty data.")
 
@@ -160,7 +160,7 @@ def show_explore_page():
     # plt.savefig("x")
     # st.image("x.png")
     # os.remove("x.png")
-
+    st.write("------------")
     st.write("## Machine Learning Modelling")
     st.write("We are using **Random Forest Regression** for making our prediction.")
     st.write("We have determined the **independent variables**:")
@@ -196,9 +196,9 @@ def show_explore_page():
     random_for_reg.fit(X_train,y_train)
     y_pred = random_for_reg.predict(X_test)
 
-    st.write("## Results")
     st.write("------------")
-
+    st.write("## Results")
+    
     fig, ax = plt.subplots()
     plt.scatter(random_for_reg.predict(X_train), y_train, edgecolor="k", c = "yellow",  label = "Training data")
     plt.scatter(random_for_reg.predict(X_test), y_test, edgecolor="k", c = "red",  label = "Test data")
