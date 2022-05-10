@@ -1,1 +1,4 @@
 scikit-learn
+pickle
+numpy
+pandas
