@@ -19,7 +19,7 @@ def show_predict_page():
     st.title("Insurance Charge Prediction")
 
     st.write("""
-        ##### We need some information to predict the insurance charge
+        ##### Input information to predict the insurance charge
     """)
 
     sex = (
