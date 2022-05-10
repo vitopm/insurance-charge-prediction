@@ -1,3 +1,4 @@
+from turtle import width
 import streamlit as st
 import seaborn as sns
 import os
@@ -47,10 +48,14 @@ def show_explore_page():
     df["region"] = le_region.fit_transform(df["region"])
     st.write(df["region"].unique())
 
+    st.write("Now we are looking at the result of the encoding.")
+    st.write(df.head())
+
     import numpy as np
     import matplotlib.pyplot as plt
 
     st.write("Now we are going to see the correlation between each variable")
+    st.write("### Here is the number of charges")
     fig, ax = plt.subplots()
     fig = plt.figure(figsize=(10, 4))
     fig = sns.displot(data = df, x = df['charges'], kde=True)
@@ -61,9 +66,22 @@ def show_explore_page():
     plt.cla()
     plt.clf()
 
+
+    st.write("### Correlation between charges and smoking")
     fig, ax = plt.subplots()
     fig = plt.figure(figsize=(10, 4))
-    fig = sns.displot(data = df.loc[df.smoker == 0], kde=True)
+    fig = sns.displot(df.loc[df.smoker == 1]['charges'].values.tolist(), kde=True)
+    st.pyplot(fig)
+
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
+
+    st.write("### Correlation between charges and non-smoking")
+    fig, ax = plt.subplots()
+    fig = plt.figure(figsize=(10, 4))
+    fig = sns.displot(df.loc[df.smoker == 0]['charges'].values.tolist(), kde=True)
     st.pyplot(fig)
 
     plt.figure().clear()
@@ -71,20 +89,70 @@ def show_explore_page():
     plt.cla()
     plt.clf()
     
+    st.write("### Age data")
+    fig, ax = plt.subplots()
+    # fig = plt.figure(figsize=(10, 4))
+    fig = sns.displot(data = df, x = df["age"], kde=True)
+    st.pyplot(fig)
+
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
     
-    x = np.random.normal(size = 1000)
-    plt.hist(x, bins=50)
-    plt.savefig("x")
-    st.image("x.png")
-    os.remove("x.png")
+    st.write("### Charge vs Age")
+    fig, ax = plt.subplots()
+    fig = plt.figure(figsize=(10, 4))
+    sns.scatterplot(x= df['age'] , y= df['charges']).set_title('Charges vs Age without filter')
+    st.write(fig)
+
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
+    
+    st.write("### Charge vs Age filtered by sex")
+    st.write("1 is for male and 0 for female.")
+    fig, ax = plt.subplots()
+    fig = plt.figure(figsize=(10, 4))
+    sns.scatterplot(x= df['age'] , y= df['charges'], hue='sex', data=df).set_title('Charges vs Age filter by sex')    
+    st.write(fig)
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
+    
+    st.write("### Charge vs Age filtered by smoker")
+    st.write("1 is smoker and 0 for non-smoker")
+    fig, ax = plt.subplots()
+    fig = plt.figure(figsize=(10, 4))
+    sns.scatterplot(x= df['age'] , y= df['charges'], hue='smoker', data=df).set_title('Charges vs Age filtered by smoker')
+    st.write(fig)
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
+    
 
 
-    
+    # x = np.random.normal(size = 1000)
+    # plt.hist(x, bins=50)
+    # plt.savefig("x")
+    # st.image("x.png")
+    # os.remove("x.png")
+
+    st.write("## Machine Learning Modelling")
+    st.write("We are using **decision tree regression** for making our prediction.")
+    st.write("We have determined *independent variable*:")
     X = df.iloc[:, :-1]
-    X.head()
+    for col in X.columns:
+        st.write("- {col} ".format(col = col))
+    # X.head()
 
+    st.write("Also the *dependent variable*:")
+    st.write("- charges")
     y = df.iloc[:, -1]
-    y.head()
+    # y.head()
 
     from sklearn.metrics import mean_squared_error, mean_absolute_error
     import numpy as np 
@@ -96,4 +164,5 @@ def show_explore_page():
     y_pred = regressor.predict(X)
 
     error = np.sqrt(mean_squared_error(y, y_pred))
-    st.write(error)
+    st.write("After running the training, we get MSE as much as {mse:.2f}.".format(mse=error))
+    
