@@ -1,4 +1,6 @@
 import streamlit as st
+import seaborn as sns
+import os
 
 def show_explore_page():
     st.header("Data exploratory Analysis")
@@ -45,9 +47,8 @@ def show_explore_page():
     df["region"] = le_region.fit_transform(df["region"])
     st.write(df["region"].unique())
 
-    import seaborn as sns
+    import numpy as np
     import matplotlib.pyplot as plt
-    import os
 
     st.write("Now we are going to see the correlation between each variable")
     fig, ax = plt.subplots()
@@ -60,7 +61,17 @@ def show_explore_page():
     plt.cla()
     plt.clf()
 
-    import numpy as np
+    fig, ax = plt.subplots()
+    fig = plt.figure(figsize=(10, 4))
+    fig = sns.displot(data = df.loc[df.smoker == 0], kde=True)
+    st.pyplot(fig)
+
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
+    
+    
     x = np.random.normal(size = 1000)
     plt.hist(x, bins=50)
     plt.savefig("x")
