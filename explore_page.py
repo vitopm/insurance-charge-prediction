@@ -46,10 +46,28 @@ def show_explore_page():
     st.write(df["region"].unique())
 
     import seaborn as sns
-    
+    import matplotlib.pyplot as plt
+    import os
+
     st.write("Now we are going to see the correlation between each variable")
-    st.pyplot(sns.displot(data = df, x = df['charges'], kde=True))
-    st.pyplot(sns.displot(df.loc[df.smoker == 'no']['charges'].values.tolist(), kde=True))
+    fig, ax = plt.subplots()
+    fig = plt.figure(figsize=(10, 4))
+    fig = sns.displot(data = df, x = df['charges'], kde=True)
+    st.pyplot(fig)
+
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
+
+    import numpy as np
+    x = np.random.normal(size = 1000)
+    plt.hist(x, bins=50)
+    plt.savefig("x")
+    st.image("x.png")
+    os.remove("x.png")
+
+
     
     X = df.iloc[:, :-1]
     X.head()
